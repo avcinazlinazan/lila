@@ -303,6 +303,31 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Üyelik Formu -->
+            <div class="signup-card reveal active">
+                <h2>Ücretsiz Üye Ol</h2>
+                <form id="signupForm" novalidate>
+                    <div class="form-group">
+                        <label for="fullName">Ad Soyad</label>
+                        <input type="text" id="fullName" placeholder="Adınız Soyadınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname">Kullanıcı Adı</label>
+                        <input type="text" id="nickname" placeholder="kullanici_adi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" placeholder="ornek@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Şifre</label>
+                        <input type="password" id="password" placeholder="En az 6 karakter" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn" id="submitBtn">Hemen Başla</button>
+                </form>
+                <div class="form-status" id="formStatus"></div>
+            </div>
         </div>
     </section>
 
@@ -535,8 +560,8 @@
         reveals.forEach(el => observer.observe(el));
 
         // Supabase
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const SUPABASE_URL = 'https://ickcinoyliuacleajboi.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_RxF74fz4yxi7vGGHJlt1hA_AusPid0G';
         let sbClient;
         try {
             if (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
