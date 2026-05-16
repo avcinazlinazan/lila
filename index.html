@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aşkın Rengi | Evlilik Sitesi</title>
+    <meta name="description" content="Aşkın Rengi, hayat arkadaşını bulman için var. Ücretsiz üye ol, mutluluk hareketine sen de katıl.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e4e6e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'></path></svg>">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            /* Vibrant pastel palette: pink, lilac, mauve */
+            --color-base: #fff8f9; /* very light pink */
+            --color-surface: #ffffff;
+            --color-primary: #ff9aab; /* soft pink */
+            --color-primary-light: #ffd1dc; /* light pink */
+            --color-primary-dark: #c76f8f; /* mauve */
+            --color-text: #2c252d;
+            --color-text-muted: #695e6a;
+            /* Typography */
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 48px;
+            --space-2xl: 80px;
+            --space-3xl: 120px;
+            --shadow-color: 199, 111, 143; /* updated for new palette */
+        }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background-color: var(--color-base);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--color-primary-dark);
+        }
+        h1 { font-size: 3.5rem; letter-spacing: -0.02em; }
+        h2 { font-size: 2.5rem; letter-spacing: -0.01em; }
+        h3 { font-size: 1.5rem; }
+
+        .bg-mesh {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+            background: radial-gradient(circle at 20% 40%, rgba(255,154,171,0.15), transparent 60%),
+                        radial-gradient(circle at 80% 60%, rgba(199,111,143,0.10), transparent 60%);
+        }
+
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 var(--space-lg); }
+
+        a, button {
+            cursor: pointer; text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 1rem;
+            border: none; position: relative; overflow: hidden;
+            color: white; background-color: var(--color-primary-dark);
+            box-shadow: 0 4px 12px rgba(var(--shadow-color), 0.15);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(var(--shadow-color), 0.25); }
+        .btn-outline {
+            background-color: transparent; color: var(--color-primary-dark);
+            border: 1px solid var(--color-primary-dark); box-shadow: none;
+        }
+        .btn-outline:hover { background-color: rgba(var(--shadow-color), 0.05); }
+
+        .reveal { opacity: 0; transform: translateY(20px); }
+        .reveal.active { opacity: 1; transform: translateY(0); transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        /* Topbar & Navbar */
+        .topbar {
+            background: var(--color-primary-dark);
+            color: white;
+            padding: 8px 0;
+            font-size: 0.85rem;
+        }
+        .topbar-container {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .lang-select select {
+            background: transparent; border: none; color: white; cursor: pointer; outline: none;
+        }
+        
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            padding: var(--space-md) 0;
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--color-primary-dark); display: flex; align-items: center; gap: 8px; }
+        .nav-links { display: flex; gap: var(--space-lg); align-items: center; }
+        .nav-links a { color: var(--color-text); font-weight: 500; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--color-primary-dark); }
+.logo img.logo-tulip { width: 24px; height: 24px; margin-right: 8px; vertical-align: middle; }
+
+        /* Hero */
+        .hero {
+            padding: var(--space-xl) 0;
+            min-height: 50vh;
+            display: flex; align-items: center;
+            position: relative;
+            background: linear-gradient(to right, rgba(255,220,230,0.9), rgba(255,240,245,0.6)), url('file:///C:/Users/User/.gemini/antigravity/brain/39f85bb6-1040-4719-9b6b-83f235011c2f/hero_hands_torso_1778700220754.png') center/cover;
+        }
+        .hero-content { max-width: 600px; }
+        .hero h1 { font-size: 4rem; margin-bottom: var(--space-md); color: #2c252d; }
+        .hero p { font-size: 1.2rem; color: var(--color-text); margin-bottom: var(--space-xl); font-weight: 400; }
+        .app-buttons { display: flex; gap: var(--space-md); }
+        .app-btn {
+            background: #000; color: #fff; padding: 10px 24px; border-radius: 8px;
+            display: flex; align-items: center; gap: 12px; font-size: 0.9rem;
+        }
+        .app-btn i { width: 24px; height: 24px; }
+        .app-btn strong { display: block; font-size: 1.1rem; }
+
+        /* Diferansiye Bölümü */
+        .different-section { padding: var(--space-3xl) 0; text-align: center; background: white; }
+        .different-section h2 { margin-bottom: var(--space-md); }
+        .different-section p { font-size: 1.2rem; color: var(--color-text-muted); max-width: 800px; margin: 0 auto; }
+
+        /* Özellikler */
+        .features-wrap { padding: var(--space-3xl) 0; }
+        .feature-row {
+            display: flex; align-items: center; gap: var(--space-3xl); margin-bottom: var(--space-3xl);
+        }
+        .feature-row:nth-child(even) { flex-direction: row-reverse; }
+        .feature-img { flex: 1; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(var(--shadow-color), 0.1); }
+        .feature-img img { width: 100%; height: 400px; object-fit: cover; }
+        .feature-text { flex: 1; }
+        .feature-text h3 { font-size: 2rem; margin-bottom: var(--space-md); }
+        .feature-text p { color: var(--color-text-muted); font-size: 1.1rem; }
+
+        /* Testimonials */
+        .testimonials { background: var(--color-primary-light); padding: var(--space-3xl) 0; text-align: center; }
+        .testim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-lg); margin-top: var(--space-2xl); }
+        .testim-card { background: white; padding: var(--space-xl); border-radius: 16px; box-shadow: 0 10px 20px rgba(var(--shadow-color),0.05); text-align: left; }
+        .testim-card p { font-style: italic; color: var(--color-text); margin-bottom: var(--space-md); }
+        .testim-card strong { color: var(--color-primary-dark); }
+
+        /* Blog & Mutlu Çiftler */
+        .grid-section { padding: var(--space-3xl) 0; }
+        .section-title { text-align: center; margin-bottom: var(--space-2xl); }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-lg); }
+        .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 20px rgba(var(--shadow-color),0.05); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: var(--space-lg); }
+        .card-body h4 { margin-bottom: var(--space-sm); font-family: var(--font-body); font-size: 1.2rem; }
+        .card-body p { color: var(--color-text-muted); font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Pricing (Premium Üyelik) */
+        .pricing { background: white; padding: var(--space-3xl) 0; text-align: center; }
+        .pricing-cards { display: flex; gap: var(--space-xl); justify-content: center; margin-top: var(--space-xl); flex-wrap: wrap; }
+        .pricing-card { background-color: var(--color-base); border-radius: 20px; padding: var(--space-xl) var(--space-lg); width: 100%; max-width: 350px; border: 1px solid var(--color-primary-light); display: flex; flex-direction: column; }
+        .pricing-card.featured { border: 2px solid var(--color-primary-dark); transform: scale(1.05); background: white; box-shadow: 0 24px 48px rgba(var(--shadow-color), 0.1); }
+        .price { font-family: var(--font-display); font-size: 3rem; font-weight: 700; color: var(--color-primary-dark); margin: var(--space-md) 0; }
+        .price span { font-size: 1rem; color: var(--color-text-muted); font-family: var(--font-body); font-weight: 400; }
+        .pricing-features { list-style: none; margin: var(--space-lg) 0; flex: 1; text-align: left; }
+        .pricing-features li { margin-bottom: var(--space-sm); display: flex; gap: 8px; }
+        .pricing-features li svg { color: var(--color-primary); flex-shrink: 0; width: 20px; height: 20px; margin-top: 4px; }
+        
+        .bike-section { padding: var(--space-3xl) 0; background: var(--color-base); }
+
+        /* Footer */
+        .footer { background: #261f27; color: white; padding: var(--space-3xl) 0 var(--space-lg); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-2xl); margin-bottom: var(--space-2xl); }
+        .footer-col h4 { color: white; margin-bottom: var(--space-md); font-family: var(--font-body); }
+        .footer-col a { display: block; color: #a99fae; margin-bottom: var(--space-sm); }
+        .footer-col a:hover { color: var(--color-primary-light); }
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--space-lg); color: #a99fae; font-size: 0.9rem; }
+        .footer-visuals { display: flex; justify-content: center; gap: var(--space-lg); margin-top: var(--space-xl); }
+        .footer-visuals img { max-height: 120px; border-radius: 8px; object-fit: cover; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .feature-row { flex-direction: column !important; }
+            .feature-img img { height: 250px; }
+            .pricing-card.featured { transform: scale(1); }
+            .app-buttons { flex-direction: column; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-mesh"></div>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="container topbar-container">
+            <div>Türkiye'nin Seçkin Evlilik Sitesi</div>
+            <div class="lang-select">
+                <select>
+                    <option>Türkçe</option>
+                    <option>İngilizce</option>
+                    <option>Almanca</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=100&q=80" alt="Heart Red Tulip" class="logo-tulip"> Aşkın Rengi
+            </a>
+            <div class="nav-links">
+                <a href="#ozellikler">Özellikler</a>
+                <a href="#hikayeler">Mutlu Çiftler</a>
+                <a href="#blog">Blog</a>
+                <a href="#uyelik" class="btn btn-outline" style="padding: 8px 16px;">Giriş Yap</a>
+                <a href="#uyelik" class="btn" style="padding: 8px 16px;">Üye Ol</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content reveal active">
+                <h1>Hayat arkadaşını bulman için varız.</h1>
+                <p>Türkiye'nin en güvenilir evlilik platformuna ücretsiz üye ol, mutluluk hareketine sen de katıl. Doğru eş adayına ulaşmak artık çok kolay!</p>
+                <div class="app-buttons">
+                    <a href="#" class="app-btn">
+                        <i data-lucide="apple"></i>
+                        <div>
+                            <span>İndirin</span>
+                            <strong>App Store</strong>
+                        </div>
+                    </a>
+                    <a href="#" class="app-btn">
+                        <i data-lucide="smartphone"></i>
+                        <div>
+                            <span>İndirin</span>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Spring Flowers Section -->
+<section class="flowers-section reveal">
+    <div class="container">
+        <h2 class="section-title">Bahar Çiçekleri</h2>
+        <div class="grid-3">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&q=80" alt="Tulip">
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1518666607560-7c6b84d0b31a?w=600&q=80" alt="Daffodil">
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600&q=80" alt="Cherry Blossom">
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Large Tulip Section (Moved) -->
+    <section class="big-tulip-section reveal">
+        <div class="container" style="text-align: center;">
+            <img src="https://images.unsplash.com/photo-1528961276-90c8c0c32a99?w=800&q=80" alt="Large Red Tulip" style="width:100%; max-height:500px; object-fit:cover; border-radius:24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin-bottom: var(--space-xl);">
+        </div>
+    </section>
+
+    <!-- Diğer flört uygulamaları gibi değiliz -->
+    <section class="different-section reveal">
+        <div class="container">
+            <h2>Diğer flört uygulamaları gibi değiliz.</h2>
+            <p>Ciddi bir ilişki ve evlilik arayan binlerce elit üyeyi bir araya getiren Aşkın Rengi, her gün sayısız çiftin mutluluğuna şahitlik ediyor.</p>
+        </div>
+    </section>
+
+    <!-- Özellikler -->
+    <section class="features-wrap" id="ozellikler">
+        <div class="container">
+            
+            <div class="feature-row reveal">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80" alt="Evlilik Sitesi">
+                </div>
+                <div class="feature-text">
+                    <h3>Güvenilir Evlilik Platformu</h3>
+                    <p>Aşkın Rengi, evlilik amacıyla yola çıkan ve ciddi bir şekilde evlilik gerçekleştirmek isteyen bireyleri bir araya getiren online evlilik sitesidir. Yalnızca niyeti evlilik olan kullanıcılar üye olmaktadır. Üye olan kullanıcılar titizlikle editörler tarafından incelenerek onaylanır.</p>
+                </div>
+            </div>
+
+            <div class="feature-row reveal">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1526333632117-910dc025a176?w=800&q=80" alt="Detaylı Arama">
+                </div>
+                <div class="feature-text">
+                    <h3>Detaylı Arama & Akıllı Eşleşme</h3>
+                    <p>Detaylı arama özelliği ile siteye kayıtlı üyeleri karakter ve hayat tarzınıza uygun olarak filtreleyebilirsiniz. Akıllı eşleştirme algoritmamız, size en uygun eş adayını diğerlerinden ayırarak bulmanıza olanak tanır. İdeal eş adayınızı bulmak hiç bu kadar kolay olmamıştı.</p>
+                </div>
+            </div>
+
+            <div class="feature-row reveal">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=800&q=80" alt="Güvenli Mesajlaşma">
+                </div>
+                <div class="feature-text">
+                    <h3>Güvenli Mesajlaşma & Gizlilik</h3>
+                    <p>Kullanıcılarımızın tüm bilgileri saklı tutulmakta ve kimse ile paylaşılmamaktadır. Fotoğraflarınızın çalınmasına karşı alınan önlemler sayesinde güvenli bir şekilde eş adaylarınızla iletişime geçebilir, güvenli mesajlaşma sistemimiz üzerinden sohbet edebilirsiniz.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bisikletli Çiftler -->
+    <section class="bike-section reveal">
+        <div class="container">
+            <h2 class="section-title">Birlikte Yeni Yollar Keşfedin</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=600&q=80" alt="Bisikletli Çift 1">
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164883eecd0c?w=600&q=80" alt="Bisikletli Çift 2">
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1514336020551-6f4e85741695?w=600&q=80" alt="Bisikletli Çift 3">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container reveal">
+            <h2>Üyelerimiz Ne Diyor?</h2>
+            <div class="testim-grid">
+                <div class="testim-card">
+                    <p>“Gayet güzel ve seviyeli, basit ve kullanımı kolay bir uygulama, sahte kişi yok diyebilirim.”</p>
+                    <strong>Ayşe C.</strong>
+                </div>
+                <div class="testim-card">
+                    <p>“Aradığınız kişiyi bulabileceğiniz güvenilir bir site. Özenle hazırlanmış ve çok kullanışlı.”</p>
+                    <strong>Yağmur K.</strong>
+                </div>
+                <div class="testim-card">
+                    <p>“Güzel bir uygulama, tamamen gerçeği yansıtıyor. Lüks teması da çok hoş, tavsiye ederim.”</p>
+                    <strong>Yeliz E.</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mutlu Çiftler -->
+    <section class="grid-section" id="hikayeler">
+        <div class="container reveal">
+            <h2 class="section-title">Mutlu Çiftlerimiz</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <img src="file:///C:/Users/User/.gemini/antigravity/brain/39f85bb6-1040-4719-9b6b-83f235011c2f/hero_wedding_1778676775576.png" alt="Nihat & Ayşe">
+                    <div class="card-body">
+                        <h4>Nihat & Ayşe</h4>
+                        <p>“Geçen yıl siteniz üzerinden tanıştık. 5 aydır evliyiz. Sizlere çok teşekkür ediyoruz, mutluluğumuza vesile oldunuz.”</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&q=80" alt="Rümeysa & Can">
+                    <div class="card-body">
+                        <h4>Rümeysa & Can</h4>
+                        <p>“Eşim ile sitenizden tanıştık. Görüşme kararı aldık ve şimdi 2 senelik evliyiz. Her şey çok güzel. Minnettarız.”</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80" alt="İzel & Orhan">
+                    <div class="card-body">
+                        <h4>İzel & Orhan</h4>
+                        <p>“Evlilik için çekingenken onu görünce her şey değişti. İyi ki o diyorum. Şu an kızımız bile var. Teşekkürler Aşkın Rengi.”</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Üyelik (Fiyatlandırma) -->
+    <section class="pricing" id="uyelik">
+        <div class="container reveal">
+            <h2 class="section-title">Ayrıcalıklı Üyelik Seçenekleri</h2>
+            <p style="color: var(--color-text-muted); margin-bottom: var(--space-xl);">Sıradan bir arkadaşlık sitesi değil, elit bir evlilik platformuyuz.</p>
+            <div class="pricing-cards">
+                <!-- Aylık Plan -->
+                <div class="pricing-card">
+                    <h3>Aylık Premium</h3>
+                    <div class="price">$24<span> / ay</span></div>
+                    <ul class="pricing-features">
+                        <li><i data-lucide="check"></i> Sınırsız Mesajlaşma</li>
+                        <li><i data-lucide="check"></i> Kimlerin profilinize baktığını görün</li>
+                        <li><i data-lucide="check"></i> Gelişmiş arama filtreleri</li>
+                        <li><i data-lucide="check"></i> Fotoğraf gizlilik ayarları</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline">Seç ve Başla</a>
+                </div>
+                
+                <!-- Yıllık Plan -->
+                <div class="pricing-card featured">
+                    <h3 style="color: var(--color-primary-dark);">Yıllık Premium</h3>
+                    <div class="price">$19<span> / ay</span></div>
+                    <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 16px;">Yıllık <strong>$228</strong> olarak faturalandırılır.</p>
+                    <ul class="pricing-features">
+                        <li><i data-lucide="check"></i> <strong>Aylık paketteki her şey</strong></li>
+                        <li><i data-lucide="check"></i> Görünmez modda gezinme</li>
+                        <li><i data-lucide="check"></i> Arama sonuçlarında en üstte yer alma</li>
+                        <li><i data-lucide="check"></i> Öncelikli eşleştirme algoritmaları</li>
+                        <li><i data-lucide="check"></i> Profesyonel ilişki danışmanlığı</li>
+                    </ul>
+                    <a href="#" class="btn">Avantajlı Fiyatla Seç</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+<footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Aşkın Rengi</h4>
+                    <p style="color: #a99fae; font-size: 0.9rem; margin-bottom: 16px;">Hayat arkadaşını bulmanın en nezih, güvenilir ve modern yolu.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Kurumsal</h4>
+                    <a href="#">Hakkımızda</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Mutlu Çiftler</a>
+                    <a href="#">İletişim</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Destek</h4>
+                    <a href="#">Yardım Merkezi</a>
+                    <a href="#">Güvenlik İpuçları</a>
+                    <a href="#">Kullanıcı Sözleşmesi</a>
+                    <a href="#">Gizlilik Politikası</a>
+                </div>
+            </div>
+        
+            <div class="footer-visuals">
+                <img src="https://images.unsplash.com/photo-1522513497016-2c5b4635a032?w=600&q=80" alt="Spring Flowers">
+                <img src="https://images.unsplash.com/photo-1482039674129-0b0e6c5c14a9?w=600&q=80" alt="Ringed Hands">
+            </div>
+        </div>
+            <div class="footer-bottom">
+                <p>Tüm hakları saklıdır © 2026. Aşkın Rengi</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Reveal Animations
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
