@@ -205,7 +205,47 @@
             .app-buttons { flex-direction: column; }
             .nav-links { display: none; }
         }
+        /* Signup Card */
+        .hero .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-2xl);
+        }
+        .hero-content { flex: 1; min-width: 320px; }
+        .signup-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: var(--space-lg);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 20px 40px rgba(var(--shadow-color), 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin: var(--space-lg) 0;
+        }
+        .signup-card h2 { font-size: 1.5rem; margin-bottom: var(--space-md); color: var(--color-primary-dark); text-align: center; }
+        .form-group { margin-bottom: var(--space-sm); }
+        .form-group label { display: block; margin-bottom: 3px; font-weight: 600; font-size: 0.8rem; color: var(--color-text); }
+        .form-group input {
+            width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);
+            background: white; font-family: var(--font-body); font-size: 0.9rem; transition: all 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(var(--shadow-color), 0.1); }
+        .signup-card .btn { width: 100%; margin-top: var(--space-sm); }
+        .form-status { margin-top: var(--space-md); padding: 10px; border-radius: 8px; font-size: 0.9rem; text-align: center; display: none; }
+        .form-status.success { background: #e6f7ed; color: #1e4620; display: block; }
+        .form-status.error { background: #fdf2f2; color: #9b1c1c; display: block; }
+
+        @media (max-width: 1024px) {
+            .hero .container { flex-direction: column; text-align: center; justify-content: center; }
+            .hero-content { margin-bottom: var(--space-xl); }
+            .signup-card { margin: 0 auto; }
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -244,6 +284,30 @@
     <!-- Hero -->
     <section class="hero">
         <div class="container">
+            <div class="signup-card reveal active">
+                <h2>Ücretsiz Kayıt Ol</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label>Ad Soyad</label>
+                        <input type="text" id="fullName" placeholder="Adınız Soyadınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rumuz</label>
+                        <input type="text" id="nickname" placeholder="Kullanıcı adınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        <input type="email" id="email" placeholder="ornek@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Şifre</label>
+                        <input type="password" id="password" placeholder="En az 6 karakter" required>
+                    </div>
+                    <button type="submit" class="btn" id="submitBtn">Hemen Başla</button>
+                    <div id="formStatus" class="form-status"></div>
+                </form>
+            </div>
+
             <div class="hero-content reveal active">
                 <h1>Hayat arkadaşını bulman için varız.</h1>
                 <p>Türkiye'nin en güvenilir evlilik platformuna ücretsiz üye ol, mutluluk hareketine sen de katıl. Doğru eş adayına ulaşmak artık çok kolay!</p>
@@ -316,7 +380,7 @@
 
             <div class="feature-row reveal">
                 <div class="feature-img">
-                    <img src="https://images.unsplash.com/photo-1526333632117-910dc025a176?w=800&q=80" alt="Detaylı Arama">
+                    <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800&q=80" alt="Ağaç Altında Kitap Okuyan Çift">
                 </div>
                 <div class="feature-text">
                     <h3>Detaylı Arama & Akıllı Eşleşme</h3>
@@ -343,13 +407,13 @@
             <h2 class="section-title">Birlikte Yeni Yollar Keşfedin</h2>
             <div class="grid-3">
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=600&q=80" alt="Bisikletli Çift 1">
+                    <img src="https://images.unsplash.com/photo-1473679408190-0693dd22fe6a?w=800&q=80" alt="Bisikletli Çift 1">
                 </div>
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1522673607200-164883eecd0c?w=600&q=80" alt="Bisikletli Çift 2">
+                    <img src="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=800&q=80" alt="Ağaç Altında Kitap Okuyan Çift">
                 </div>
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1514336020551-6f4e85741695?w=600&q=80" alt="Bisikletli Çift 3">
+                    <img src="file:///C:/Users/User/.gemini/antigravity/brain/8f09fe08-f41d-4560-8ceb-a30400f05d87/couple_on_same_bicycle_spring_1778951808748.png" alt="Bisikletli Çift 3">
                 </div>
             </div>
         </div>
@@ -494,6 +558,65 @@
         }, { threshold: 0.1 });
 
         reveals.forEach(el => observer.observe(el));
+
+        // Supabase Integration
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        let supabaseClient;
+        try {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch(e) { console.error("Supabase error", e); }
+
+        const signupForm = document.getElementById('signupForm');
+        const formStatus = document.getElementById('formStatus');
+        const submitBtn = document.getElementById('submitBtn');
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!supabaseClient) {
+                formStatus.textContent = 'Hata: Supabase bilgileri eksik.';
+                formStatus.className = 'form-status error';
+                return;
+            }
+
+            const name = document.getElementById('fullName').value;
+            const nickname = document.getElementById('nickname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Kaydediliyor...';
+            formStatus.style.display = 'none';
+
+            try {
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            nickname: nickname
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                formStatus.textContent = 'Kayıt başarılı! E-posta onayını kontrol edin.';
+                formStatus.className = 'form-status success';
+                signupForm.reset();
+            } catch (err) {
+                formStatus.textContent = 'Hata: ' + (err.message || 'Kayıt başarısız.');
+                formStatus.className = 'form-status error';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Hemen Başla';
+            }
+        });
     </script>
 </body>
 </html>
