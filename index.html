@@ -204,6 +204,45 @@
             .app-buttons { flex-direction: column; }
             .nav-links { display: none; }
         }
+        /* Signup Card */
+        .hero .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-2xl);
+        }
+        .hero-content { flex: 1; min-width: 300px; }
+        .signup-card {
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: var(--space-lg);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 20px 40px rgba(var(--shadow-color),0.1);
+            border: 1px solid rgba(255,255,255,0.4);
+            margin: var(--space-lg) 0;
+        }
+        .signup-card h2 { font-size: 1.5rem; margin-bottom: var(--space-md); color: var(--color-primary-dark); text-align: center; }
+        .form-group { margin-bottom: var(--space-sm); }
+        .form-group label { display: block; margin-bottom: 3px; font-weight: 600; font-size: 0.8rem; color: var(--color-text); }
+        .form-group input {
+            width: 100%; padding: 10px 12px; border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.1); background: white;
+            font-family: var(--font-body); font-size: 0.9rem; transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(var(--shadow-color),0.1); }
+        .signup-card .btn { width: 100%; margin-top: var(--space-sm); }
+        .form-status { margin-top: var(--space-md); padding: 10px; border-radius: 8px; font-size: 0.9rem; text-align: center; display: none; }
+        .form-status.success { background: #e6f7ed; color: #1e4620; display: block; }
+        .form-status.error { background: #fdf2f2; color: #9b1c1c; display: block; }
+        @media (max-width: 1024px) {
+            .hero .container { flex-direction: column; text-align: center; justify-content: center; }
+            .hero-content { margin-bottom: var(--space-xl); }
+            .signup-card { margin: 0 auto; }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -494,6 +533,47 @@
         }, { threshold: 0.1 });
 
         reveals.forEach(el => observer.observe(el));
+
+        // Supabase
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        let sbClient;
+        try {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
+                sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } catch(e) { console.error(e); }
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('formStatus');
+            const btn = document.getElementById('submitBtn');
+            if (!sbClient) {
+                status.textContent = 'Supabase bilgileri eksik.';
+                status.className = 'form-status error';
+                return;
+            }
+            btn.disabled = true; btn.textContent = 'Kaydediliyor...';
+            status.style.display = 'none';
+            try {
+                const { error } = await sbClient.auth.signUp({
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    options: { data: {
+                        full_name: document.getElementById('fullName').value,
+                        nickname: document.getElementById('nickname').value
+                    }}
+                });
+                if (error) throw error;
+                status.textContent = 'Kayıt başarılı! E-posta onayını kontrol edin.';
+                status.className = 'form-status success';
+                document.getElementById('signupForm').reset();
+            } catch(err) {
+                status.textContent = 'Hata: ' + (err.message || 'Kayıt başarısız.');
+                status.className = 'form-status error';
+            } finally {
+                btn.disabled = false; btn.textContent = 'Hemen Başla';
+            }
+        });
     </script>
 </body>
 </html>
