@@ -39,7 +39,6 @@
             --space-3xl: 120px;
             --shadow-color: 199, 111, 143; /* updated for new palette */
         }
-        }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -205,7 +204,81 @@
             .app-buttons { flex-direction: column; }
             .nav-links { display: none; }
         }
+        /* Signup Card */
+        .hero .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-2xl);
+        }
+        .signup-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: var(--space-xl);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 
+                0 10px 30px rgba(var(--shadow-color), 0.1),
+                0 1px 8px rgba(var(--shadow-color), 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 10;
+        }
+        .signup-card h2 { 
+            font-size: 2rem; 
+            margin-bottom: var(--space-lg); 
+            text-align: center; 
+            color: var(--color-primary-dark);
+            line-height: 1.1;
+        }
+        .form-group { margin-bottom: var(--space-md); text-align: left; }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .form-group input {
+            width: 100%; 
+            padding: 14px 18px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.9); 
+            font-family: var(--font-body); 
+            font-size: 1rem; 
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .form-group input:focus { 
+            outline: none; 
+            border-color: var(--color-primary); 
+            box-shadow: 0 0 0 4px rgba(255, 154, 171, 0.15);
+            background: white;
+            transform: translateY(-2px);
+        }
+        .signup-card .btn { width: 100%; margin-top: var(--space-md); padding: 16px; font-size: 1.1rem; }
+        .form-status {
+            margin-top: var(--space-md);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+            text-align: center;
+        }
+        .form-status.success { background: #e6f7ed; color: #1e4620; display: block; }
+        .form-status.error { background: #fdf2f2; color: #9b1c1c; display: block; }
+
+        @media (max-width: 1024px) {
+            .hero .container { flex-direction: column; gap: var(--space-xl); text-align: center; }
+            .hero-content { margin: 0 auto; }
+            .signup-card { margin: 0 auto; }
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -244,6 +317,30 @@
     <!-- Hero -->
     <section class="hero">
         <div class="container">
+            <div class="signup-card reveal active" style="transition-delay: 0.2s;">
+                <h2>Aramıza Katıl</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="fullName">Ad Soyad</label>
+                        <input type="text" id="fullName" placeholder="Adınız ve Soyadınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname">Rumuz</label>
+                        <input type="text" id="nickname" placeholder="Sitede görünecek adınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" placeholder="ornek@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Şifre</label>
+                        <input type="password" id="password" placeholder="En az 6 karakter" required>
+                    </div>
+                    <button type="submit" class="btn" id="submitBtn">Ücretsiz Kayıt Ol</button>
+                    <div id="formStatus" class="form-status"></div>
+                </form>
+            </div>
+
             <div class="hero-content reveal active">
                 <h1>Hayat arkadaşını bulman için varız.</h1>
                 <p>Türkiye'nin en güvenilir evlilik platformuna ücretsiz üye ol, mutluluk hareketine sen de katıl. Doğru eş adayına ulaşmak artık çok kolay!</p>
@@ -494,6 +591,68 @@
         }, { threshold: 0.1 });
 
         reveals.forEach(el => observer.observe(el));
+
+        // Supabase Configuration
+        // NOT: Kendi Supabase URL ve Key değerlerinizi buraya ekleyin
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        let supabase;
+        try {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error('Supabase initialization failed', e);
+        }
+
+        const signupForm = document.getElementById('signupForm');
+        const formStatus = document.getElementById('formStatus');
+        const submitBtn = document.getElementById('submitBtn');
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!supabase) {
+                formStatus.textContent = 'Lütfen Supabase URL ve Key değerlerini script kısmına ekleyin.';
+                formStatus.className = 'form-status error';
+                return;
+            }
+
+            const name = document.getElementById('fullName').value;
+            const nickname = document.getElementById('nickname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Kaydediliyor...';
+            formStatus.style.display = 'none';
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            nickname: nickname
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                formStatus.textContent = 'Kayıt başarılı! Lütfen e-postanızı onaylayın.';
+                formStatus.className = 'form-status success';
+                signupForm.reset();
+            } catch (error) {
+                formStatus.textContent = 'Hata: ' + (error.message || 'Bir sorun oluştu.');
+                formStatus.className = 'form-status error';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Ücretsiz Kayıt Ol';
+            }
+        });
     </script>
 </body>
 </html>
